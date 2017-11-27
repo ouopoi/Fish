@@ -1,5 +1,6 @@
 #include "FishLayer.h"
 #include "Fish.h"
+#include <ctime>
 
 FishLayer::FishLayer(void)
 {
@@ -15,12 +16,12 @@ bool FishLayer::init()
 		}
 		_fishes = CCArray::createWithCapacity(FISH_MAX_COUNT);
 		CC_SAFE_RETAIN(_fishes);
-		srand(time(0));
 		for(int i = 0; i < FISH_MAX_COUNT; i++){
-			int type = (rand()%100/(double)101) * k_Fish_Type_Count - 1;
+			int type = CCRANDOM_0_1() * k_Fish_Type_Count - 1;
 			Fish* fish = Fish::create((FishType)type);
 			_fishes->addObject(fish);
 		}
+		srand((unsigned)time(0));
 		this->schedule(schedule_selector(FishLayer::addFish), 3.0f);
 		return true;
 	} while (0);
@@ -29,9 +30,8 @@ bool FishLayer::init()
 
 void FishLayer::addFish(float delta)
 	{
-		int addToCount = (rand()%100/(double)101) * 5 + 1;
+		int addToCount = CCRANDOM_0_1() * 5 + 1;
 		int count = 0;
-		 srand(time(0));
 		CCObject* obj;
 		CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 		CCARRAY_FOREACH(_fishes, obj)
@@ -41,10 +41,9 @@ void FishLayer::addFish(float delta)
 			{
 				continue;
 			}
-			//this->addChild(fish);
-			//fish->setPosition(ccp((rand()%100/(double)101)* winSize.width, (rand()%100/(double)101) * winSize.height));
+			this->addChild(fish);
+			fish->setPosition(ccp(CCRANDOM_0_1() * winSize.width, CCRANDOM_0_1() * winSize.height));
 			count++;
-			resetFish(fish);
 			if(count == addToCount)
 			{
 				break;
