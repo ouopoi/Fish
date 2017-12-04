@@ -1,5 +1,5 @@
 #include "GameMenuLayer.h"
-
+#include "GameScene.h"
 GameMenuLayer::GameMenuLayer(void)
 {
 }
@@ -92,7 +92,8 @@ void GameMenuLayer::menuCallbackSelectScene(CCObject* sender)
 
 void GameMenuLayer::menuCallbackStartGame(CCObject* sender)
 {
-
+	GameScene* _gameScene=GameScene::create();
+	CCDirector::sharedDirector()->replaceScene(_gameScene);
 }
 
 GameMenuLayer::~GameMenuLayer()
