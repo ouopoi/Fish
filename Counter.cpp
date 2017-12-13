@@ -4,7 +4,7 @@ enum{
 };
 Counter* Counter::create(CCArray* presenters, int digit/* = 0 */)
 {
-	CCAssert(digit>=0 && digit<=10,"é‡‘å¸æ•°å­—åªèƒ½ä¸º0è‡³9ä¹‹é—´çš„æ•°å­—.");
+	CCAssert(digit>=0 && digit<=10,"½ğ±ÒÊı×ÖÖ»ÄÜÎª0ÖÁ9Ö®¼äµÄÊı×Ö.");
     Counter *counter = new Counter;
 	if (counter && counter->init(presenters,digit) )
 	{   
