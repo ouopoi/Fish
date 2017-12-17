@@ -1,15 +1,20 @@
 #include "MenuLayer.h"
-MenuLayer::MenuLayer()
+
+
+MenuLayer::MenuLayer(void)
 {
 }
-MenuLayer::~MenuLayer()
-{
-}
+
+
 bool MenuLayer::init()
 {
-	if (!cocos2d::Layer::init())
+	if (!CCLayer::init())
 	{
 		return false;
 	}
 	return true;
+}
+
+MenuLayer::~MenuLayer(void)
+{
 }
