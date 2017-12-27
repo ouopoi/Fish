@@ -5,7 +5,6 @@ MenuLayer::MenuLayer(void)
 {
 }
 
-
 bool MenuLayer::init()
 {
 	if (!CCLayer::init())

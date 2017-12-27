@@ -1,75 +1,96 @@
 #include "FishLayer.h"
-//#include "cocos2d.h"
 #include "Fish.h"
-#include "ctime"
-#define FISH_MAX_COUNT 50
+#include <ctime>
+enum{
+	k_Direction_Left =0,
+	k_Direction_Right,
+	k_Direction_Count
+};
 
 FishLayer::FishLayer(void)
 {
 }
+
+bool FishLayer::init()
+{
+	do 
+	{
+		if (!CCLayer::init())
+		{
+			return false;
+		}
+		_fishes = CCArray::createWithCapacity(FISH_MAX_COUNT);
+		CC_SAFE_RETAIN(_fishes);
+		for(int i = 0; i < FISH_MAX_COUNT; i++){
+			int type = CCRANDOM_0_1() * k_Fish_Type_Count - 1;
+			Fish* fish = Fish::create((FishType)type);
+			_fishes->addObject(fish);
+		}
+		srand((unsigned)time(0));
+		this->schedule(schedule_selector(FishLayer::addFish), 3.0f);
+		return true;
+	} while (0);
+	return false;
+}
+
+void FishLayer::addFish(float delta)
+	{
+		int addToCount = CCRANDOM_0_1() * 5 + 1;
+		int count = 0;
+		CCObject* obj;
+		CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+		CCARRAY_FOREACH(_fishes, obj)
+		{
+			Fish* fish = (Fish*)obj;
+			if(fish->isRunning())
+			{
+				continue;
+			}
+			//this->addChild(fish);
+			//fish->setPosition(ccp(CCRANDOM_0_1() * winSize.width, CCRANDOM_0_1() * winSize.height));
+			
+			count++;
+			resetFish(fish);
+			if(count == addToCount)
+			{
+				break;
+			}
+		}
+}
+
 FishLayer::~FishLayer(void)
 {
 }
 
-CCScene* FishLayer::scene(void)
+CCArray* FishLayer::getFishArray()
 {
-	CCScene* scene = CCScene::create();
-	FishLayer* fishLayer = FishLayer::create();
-	scene->addChild(fishLayer);
-	return scene;
+	return _fishes;
 }
 
-bool FishLayer::init()
+void FishLayer::resetFish(Fish* fish)
 {
-
-	if(!CCLayer::init())
+	int direction = CCRANDOM_0_1() * k_Direction_Count;
+	float startX,startY,endX,endY;
+	CCSize winSize =CCDirector::sharedDirector()->getWinSize();
+	CCSize fishSize =fish->getSize();
+	if(direction==k_Direction_Left)
 	{
-		return false;
+		startX=winSize.width+fishSize.width/2;
+		fish->setRotation(0);
+		endX=-fishSize.width/2;
 	}
-	
-	//Fish *fish = Fish::create((FishType)16);
-	//if(!fish)
-	//{
-	//	return false;
-	//}
-	//this->addChild(fish);
-	//fish->setPosition(ccp(1000,800));
-
-	_fishes = CCArray::createWithCapacity(50);
-	CC_SAFE_RETAIN(_fishes);
-	for(int i=0;i<FISH_MAX_COUNT;i++)
+	else
 	{
-		int type = CCRANDOM_0_1()*k_Fish_Type_Count-1;
-		//int type = rand()*k_Fish_Type_Count-1;
-		CCLOG("FishLayer type = %d",type);
-		Fish *fish = Fish::create((FishType)type);
-		_fishes->addObject(fish);
+		endX=winSize.width+fishSize.width/2;
+		fish->setRotation(180);
+		startX=-fishSize.width/2;
+
+		
 	}
-	srand(time(NULL));
-	this->schedule(schedule_selector(FishLayer::addFish),3.0f);
-	return true;
+	endY =CCRANDOM_0_1() *(winSize.height-fishSize.height)+fishSize.height/2;
+	startY=CCRANDOM_0_1() *(winSize.height-fishSize.height)+fishSize.height /2;
+	addChild(fish);
+	fish->setPosition(ccp(startX,startY));
+	fish->moveTo(ccp(endX,endY));
+
 }
-
-void FishLayer::addFish(float delta)
-{
-	int addToCount = CCRANDOM_0_1()*5+1;
-	int count = 0;
-	CCObject *obj;
-	CCSize winSize=CCDirector::sharedDirector()->getWinSize();
-	CCARRAY_FOREACH(_fishes,obj)
-	{
-		Fish *fish = (Fish *)obj;
-		if(fish->isRunning())
-		{
-			continue;
-		}
-		this->addChild(fish);
-		fish->setPosition(ccp(CCRANDOM_0_1()*winSize.width,CCRANDOM_0_1()*winSize.height));
-		count++;
-		if(count==addToCount)
-		{
-			break;
-		}
-	}
-}
-

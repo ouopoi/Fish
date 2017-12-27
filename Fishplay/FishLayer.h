@@ -1,25 +1,22 @@
 #pragma once
-//#include "d:\c++实训\c++实训软件工具\cocos2d-x-2.2.5\cocos2dx\layers_scenes_transitions_nodes\cclayer.h"
-
 #include "cocos2d.h"
 #include "StaticData.h"
+#include "Fish.h"
 USING_NS_CC;
+
+#define FISH_MAX_COUNT 50
+
 class FishLayer :
 	public CCLayer
 {
 public:
 	FishLayer(void);
-
-	CREATE_FUNC(FishLayer);
-	
-	static CCScene* scene(void);
-	
+	CREATE_FUNC(FishLayer)
 	virtual bool init();
-
 	virtual ~FishLayer(void);
-
+	CCArray* getFishArray();
 protected:
-	void addFish(float delta);
 	CCArray* _fishes;
+	void addFish(float delta);
+	void resetFish(Fish* fish);
 };
-
